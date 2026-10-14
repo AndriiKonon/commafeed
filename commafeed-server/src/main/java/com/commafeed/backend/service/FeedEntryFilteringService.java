@@ -14,8 +14,6 @@ import dev.cel.runtime.CelRuntimeFactory;
 
 import jakarta.inject.Singleton;
 
-import lombok.RequiredArgsConstructor;
-
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 
@@ -28,7 +26,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-@RequiredArgsConstructor
 @Singleton
 public class FeedEntryFilteringService {
 
@@ -48,8 +45,13 @@ public class FeedEntryFilteringService {
     private static final CelRuntime CEL_RUNTIME =
             CelRuntimeFactory.standardCelRuntimeBuilder().build();
 
-    private final ExecutorService executor = Executors.newCachedThreadPool();
+    private final ExecutorService executor;
     private final CommaFeedConfiguration config;
+
+    public FeedEntryFilteringService(CommaFeedConfiguration config) {
+        this.config = config;
+        this.executor = Executors.newCachedThreadPool();
+    }
 
     public boolean filterMatchesEntry(String filter, FeedEntry entry)
             throws FeedEntryFilterException {
